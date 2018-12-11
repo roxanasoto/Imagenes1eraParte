@@ -51,9 +51,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Project1_Filters/main.cpp \
-		../Project1_Filters/mainwindow.cpp moc_mainwindow.cpp
+		../Project1_Filters/mainwindow.cpp \
+		../Project1_Filters/filters.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
+		filters.o \
 		moc_mainwindow.o
 DIST          = ../../../../Qt/5.12.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.12.0/gcc_64/mkspecs/common/unix.conf \
@@ -247,8 +249,11 @@ DIST          = ../../../../Qt/5.12.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.12.0/gcc_64/mkspecs/features/exceptions.prf \
 		../../../../Qt/5.12.0/gcc_64/mkspecs/features/yacc.prf \
 		../../../../Qt/5.12.0/gcc_64/mkspecs/features/lex.prf \
-		../Project1_Filters/Project1_Filters.pro ../Project1_Filters/mainwindow.h ../Project1_Filters/main.cpp \
-		../Project1_Filters/mainwindow.cpp
+		../Project1_Filters/Project1_Filters.pro ../Project1_Filters/mainwindow.h \
+		../Project1_Filters/filters.h \
+		../Project1_Filters/wavelet.h ../Project1_Filters/main.cpp \
+		../Project1_Filters/mainwindow.cpp \
+		../Project1_Filters/filters.cpp
 QMAKE_TARGET  = Project1_Filters
 DESTDIR       = 
 TARGET        = Project1_Filters
@@ -257,7 +262,7 @@ TARGET        = Project1_Filters
 first: all
 ####### Build rules
 
-Project1_Filters: ui_mainwindow.h $(OBJECTS)  
+Project1_Filters: ui_mainwindow.h ui_dialogbi.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../Project1_Filters/Project1_Filters.pro ../../../../Qt/5.12.0/gcc_64/mkspecs/linux-g++/qmake.conf ../../../../Qt/5.12.0/gcc_64/mkspecs/features/spec_pre.prf \
@@ -668,9 +673,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.12.0/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Project1_Filters/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Project1_Filters/main.cpp ../Project1_Filters/mainwindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Project1_Filters/mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../Project1_Filters/mainwindow.h ../Project1_Filters/filters.h ../Project1_Filters/wavelet.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Project1_Filters/main.cpp ../Project1_Filters/mainwindow.cpp ../Project1_Filters/filters.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Project1_Filters/mainwindow.ui ../Project1_Filters/dialogbi.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -821,6 +826,7 @@ moc_mainwindow.cpp: ../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qdir.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/QKeyEvent \
 		../Project1_Filters/mainwindow.h \
 		moc_predefs.h \
 		../../../../Qt/5.12.0/gcc_64/bin/moc
@@ -830,12 +836,16 @@ compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_make_all: ui_mainwindow.h ui_dialogbi.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
+	-$(DEL_FILE) ui_mainwindow.h ui_dialogbi.h
 ui_mainwindow.h: ../Project1_Filters/mainwindow.ui \
 		../../../../Qt/5.12.0/gcc_64/bin/uic
 	/home/uburoxana/Qt/5.12.0/gcc_64/bin/uic ../Project1_Filters/mainwindow.ui -o ui_mainwindow.h
+
+ui_dialogbi.h: ../Project1_Filters/dialogbi.ui \
+		../../../../Qt/5.12.0/gcc_64/bin/uic
+	/home/uburoxana/Qt/5.12.0/gcc_64/bin/uic ../Project1_Filters/dialogbi.ui -o ui_dialogbi.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -959,6 +969,7 @@ main.o: ../Project1_Filters/main.cpp ../Project1_Filters/mainwindow.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qdir.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/QKeyEvent \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qapplication.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qcoreapplication.h \
@@ -1080,6 +1091,7 @@ mainwindow.o: ../Project1_Filters/mainwindow.cpp ../Project1_Filters/mainwindow.
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qdir.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/QKeyEvent \
 		ui_mainwindow.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtCore/QVariant \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QApplication \
@@ -1089,9 +1101,17 @@ mainwindow.o: ../Project1_Filters/mainwindow.cpp ../Project1_Filters/mainwindow.
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qdesktopwidget.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtGui/qguiapplication.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QGroupBox \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qgroupbox.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QLabel \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qlabel.h \
-		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qlineedit.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtGui/qtextoption.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QMenuBar \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qmenubar.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qmenu.h \
@@ -1100,12 +1120,19 @@ mainwindow.o: ../Project1_Filters/mainwindow.cpp ../Project1_Filters/mainwindow.
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QPushButton \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qpushbutton.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QRadioButton \
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QStatusBar \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qstatusbar.h \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QToolBar \
 		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/qtoolbar.h \
-		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QWidget
+		../../../../Qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
+		../Project1_Filters/filters.h \
+		../Project1_Filters/wavelet.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Project1_Filters/mainwindow.cpp
+
+filters.o: ../Project1_Filters/filters.cpp ../Project1_Filters/filters.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filters.o ../Project1_Filters/filters.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

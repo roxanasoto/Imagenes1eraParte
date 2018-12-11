@@ -347,20 +347,23 @@ void MainWindow::setImgRpta2(Mat img_rpta){
 {
 }*/
 
-Mat MainWindow::dibujar_puntos_clicked(Mat image)
+vector<Mat> MainWindow::transformationBilineal(Mat image)
 {
+    vector<Mat> bilineal;
     // Display dashboard
     int k, size;
     int x1,y1,ancho,alto;
     Mat input_image, img_output,croppedImage;
+    Mat img_board;
+    Mat inv_img;
 //    cvtColor(raw_image, raw_image, CV_BGR2GRAY);
 //    raw_image = raw_image;
     Rect Rec;
-    namedWindow("Dibuje Puntos");
-    setMouseCallback("Dibuje Puntos", onmouse, &image);
+    namedWindow("Draw rectangule with 2 points and enter");
+    setMouseCallback("Draw rectangule with 2 points and enter", onmouse, &image);
     //reloadImage();
     while(1){
-        imshow("Dibuje Puntos",image);
+        imshow("Draw rectangule with 2 points and enter",image);
         size = v_polygon.size();
         if(size==2){
             x1 = (v_polygon[0].x < v_polygon[1].x)?v_polygon[0].x:v_polygon[1].x;
@@ -372,7 +375,7 @@ Mat MainWindow::dibujar_puntos_clicked(Mat image)
             Rec =  Rect(x1, y1,ancho , alto);
 
             rectangle( image, Rec, Scalar( 0, 55, 255 ), +1, 4 );
-            cout<<"dibujar rectangulo... ";
+            cout<<"Draw rectangule with 2 points and enter ";
             Mat ROI(image, Rec);
 
 //            // Copy the data into new matrix
@@ -385,15 +388,14 @@ Mat MainWindow::dibujar_puntos_clicked(Mat image)
             break;
     }
     size = v_polygon.size();
-
     if(size == 2 && k==13){
         cout<<"size of image: "<<image.size<<endl;
         Mat img_board(image.rows, image.cols, CV_8UC3, Scalar(255, 255, 255));
         cout<<"size of image cpy: "<<img_board.size<<endl;
-        namedWindow("Dibuje Cuadrilatero");
-        setMouseCallback("Dibuje Cuadrilatero", onmouse_quad, &img_board);
+        namedWindow("Draw 4 points");
+        setMouseCallback("Draw 4 points", onmouse_quad, &img_board);
         while(1){
-           imshow("Dibuje Cuadrilatero",img_board);
+           imshow("Draw 4 points",img_board);
            k = waitKey(10);
 
            if (k== 27 || k==13)
@@ -426,6 +428,10 @@ Mat MainWindow::dibujar_puntos_clicked(Mat image)
             circle(img_board,p,10,Scalar(0,0,0),1);
             imshow("Dibuje Cuadrilatero",img_board);
 
+            bilineal.push_back(croppedImage);
+            bilineal.push_back(img_board);
+            bilineal.push_back(inv_img);
+
             //new MainWindow();
             //setImgSrc(croppedImage);
             //setImgRpta1(img_board);
@@ -438,11 +444,10 @@ Mat MainWindow::dibujar_puntos_clicked(Mat image)
         }
 
     }
-    return croppedImage;
+    //return croppedImage;
+    return bilineal;
     v_polygon.clear();
     quadrilat.clear();
-    //destroyWindow("Dibuje Cuadrilatero");
-    //destroyWindow("Dibuje Puntos");
 }
 
 void MainWindow::waveletFun(Mat image)
@@ -511,13 +516,23 @@ void MainWindow::on_b_histograma_clicked()
     ui->l_bordeSovel->setPixmap(QPixmap::fromImage(bordSovel));
     ui->subtitle7->setText("BORDE SOVEL");
 
-    Mat bilineal = dibujar_puntos_clicked(image);
-    QImage qbilineal = convertMatToQimage(bilineal);
-    //QImage imdisplay5((uchar*)conv.data, conv.cols, conv.rows, conv.step, QImage::Format_RGB444);//7,11,14
-    //imdisplay5 = imdisplay5.scaledToWidth(ui->l_convolution->width(),Qt::SmoothTransformation);
-    ui->l_1->setPixmap(QPixmap::fromImage(qbilineal));
-    ui->subtitle8->setText("ori_bili");
+    /*Transformacion Bilineal*/
+    vector<Mat> bilineal = transformationBilineal(imageOriginal);
+    Mat bilineal_original=bilineal[0];
+    Mat bilineal_res1=bilineal[1];
+    Mat bilineal_res2=bilineal[2];
+    QImage qbilineal_ori = convertMatToQimage(bilineal_original);
+    ui->l_1->setPixmap(QPixmap::fromImage(qbilineal_ori));
+    ui->subtitle8->setText("ORIGINAL BILINEAL");
     ui->l_1->setScaledContents( true );
+    QImage qbilineal_res1 = convertMatToQimage(bilineal_res1);
+    ui->l_2->setPixmap(QPixmap::fromImage(qbilineal_res1));
+    ui->subtitle9->setText(" BILINEAL 1");
+    ui->l_2->setScaledContents( true );
+    QImage qbilineal_res2 = convertMatToQimage(bilineal_res2);
+    ui->l_3->setPixmap(QPixmap::fromImage(qbilineal_res2));
+    ui->subtitle10->setText("BILINEAL 2");
+    ui->l_3->setScaledContents( true );
 
 
     //waveletFun(image);

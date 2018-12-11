@@ -33,7 +33,7 @@ public:
     cv::Mat convolucion_clicked(Mat );
     inline QImage convertMatToQimage(Mat );
     cv::Mat bordeSovel(Mat);
-    Mat dibujar_puntos_clicked(Mat );
+    vector<Mat> transformationBilineal(Mat);
     void waveletFun(Mat );
     void setImgSrc(Mat);
     void setImgRpta1(Mat);
