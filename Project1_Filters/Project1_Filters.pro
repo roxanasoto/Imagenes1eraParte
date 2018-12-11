@@ -30,13 +30,17 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        filters.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+        filters.h \
+    wavelet.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    dialogbi.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
